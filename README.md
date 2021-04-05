@@ -1,9 +1,3 @@
----
-title: RestTemplate封装
-date: 2020-03-23 20:53:01
-tags: [RestTemplate]
----
-
 ## 一、常见Restful接口
 
 ### 1、POST
@@ -13,43 +7,43 @@ tags: [RestTemplate]
 ```java
 //1、post请求json数据
 @PostMapping(value = "/post/json")
-public User postJsonData(@RequestBody User user, HttpServletRequest request) {
+public R postJsonData(@RequestBody T t) {
     
 }
 ```
 
-- form
+### 2、DELETE
+
+- path
 
 ```java
-//2、post请求form数据
-@PostMapping(value = "/post/form")
-public User postParamsData(@RequestParam Long id, @RequestParam String name,
-                           @RequestParam String pass, HttpServletRequest request) {
-    
+//2、delete请求path数据
+@DeleteMapping(value = "/delete/path/{id}")
+public R deletePathData(@PathVariable Long id) {
+   
 }
 ```
 
-<!-- more -->
+### 3、PUT
 
-- file
+- json
 
 ```java
-//3、post请求file数据
-@PostMapping(value = "/post/file")
-public FileData postFileData(@RequestParam("file") MultipartFile uploadFile, HttpServletRequest request) {
+//3、put请求json数据
+@PutMapping(value = "/put/json")
+public R putJsonData(@RequestBody T t) {
     
 }
 ```
 
-### 2、GET
+### 4、GET
 
 - path
 
 ```java
 //4、get请求path数据
-@GetMapping(value = "/get/path/{page}/{size}")
-public Map<String, Object> getPathData(@PathVariable(value = "page") Integer page,
-                                       @PathVariable(value = "size") Integer size, HttpServletRequest request) {
+@GetMapping(value = "/get/path/{id}")
+public R getPathData(@PathVariable(value = "id") Long id) {
     
 }
 ```
@@ -59,50 +53,7 @@ public Map<String, Object> getPathData(@PathVariable(value = "page") Integer pag
 ```java
 //5、get请求params数据
 @GetMapping(value = "/get/params")
-public User getParamsData(@RequestParam Long id, @RequestParam String name,
-                          @RequestParam String pass, HttpServletRequest request) {
-    
-}
-```
-
-- object params
-
-```java
-//6、get请求object params数据
-@GetMapping(value = "/get/object/params")
-public User getParamsObjectData(User user, HttpServletRequest request) {
-    
-}
-```
-
-### 3、PUT
-
-- path
-
-```java
-//7、put请求path数据
-@PutMapping(value = "/put/path/{id}")
-public User putPathData(@PathVariable Long id, HttpServletRequest request) {
-    
-}
-```
-
-- form
-
-```java
-//8、put请求form数据
-@PutMapping(value = "/put/form")
-public User putParamsData(User user, HttpServletRequest request) {
-    
-}
-```
-
-### 4、DELETE
-
-```java
-//9、delete请求path数据
-@DeleteMapping(value = "/delete/path/{id}")
-public User deletePathData(@PathVariable Long id, HttpServletRequest request) {
+public R getParamsData(T t) {
     
 }
 ```
@@ -115,57 +66,55 @@ public User deletePathData(@PathVariable Long id, HttpServletRequest request) {
 /**
      * POST 请求Json数据
      *
-     * @param url          请求URL
-     * @param jsonParams   请求Json数据
-     * @param timeout      超时时间
-     * @param headerParams 头部参数
-     * @return 数据Map，success标识
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param jsonParams         请求Json数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
      */
-public Map<String, Object> postJson(String url, 
-                                    String jsonParams, 
-                                    Integer timeout, 
-                                    Map<String, String> headerParams) {
-    
+public static Response postJson(RestTemplate customRestTemplate, 
+                                String url, 
+                                String jsonParams, 
+                                Map<String, String> headerParams) {
 }
 ```
 
-### 2、POST 请求Form数据
+### 2、DELETE 请求Path数据
 
 ```java
 /**
-     * POST 请求Form数据
+     * DELETE 请求Path数据
      *
-     * @param url          请求URL
-     * @param formParams   请求Form数据Map
-     * @param timeout      超时时间
-     * @param headerParams 头部参数
-     * @return 数据Map，success标识
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param pathParams         请求Path数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
      */
-public Map<String, Object> postForm(String url, 
-                                    Map<String, Object> formParams, 
-                                    Integer timeout, 
-                                    Map<String, String> headerParams) {
-    
+public static Response deletePath(RestTemplate customRestTemplate, 
+                                  String url, 
+                                  Object[] pathParams, 
+                                  Map<String, String> headerParams) {
+
 }
 ```
 
-### 3、POST 请求File数据
+### 3、PUT请求Json数据
 
 ```java
 /**
-     * POST 请求File数据
-     * 调用方controller接口 @RequestParam("file") MultipartFile uploadFile
+     * PUT 请求Json数据
      *
-     * @param url          请求URL
-     * @param uploadFile   请求File数据
-     * @param timeout      超时时间
-     * @param headerParams 头部参数
-     * @return 数据Map，success标识
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param jsonParams         请求Json数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
      */
-public Map<String, Object> postFile(String url, 
-                                    MultipartFile uploadFile, 
-                                    Integer timeout, 
-                                    Map<String, String> headerParams) throws IOException{
+public static Response putJson(RestTemplate customRestTemplate, 
+                               String url, 
+                               String jsonParams, 
+                               Map<String, String> headerParams) {
     
 }
 ```
@@ -176,16 +125,16 @@ public Map<String, Object> postFile(String url,
 /**
      * GET 请求Path数据
      *
-     * @param url          请求URL
-     * @param pathParams   请求Path数据
-     * @param timeout      超时时间
-     * @param headerParams 头部参数
-     * @return 数据Map，success标识
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param pathParams         请求Path数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
      */
-public Map<String, Object> getPath(String url, 
-                                   Object[] pathParams, 
-                                   Integer timeout, 
-                                   Map<String, String> headerParams) {
+public static Response getPath(RestTemplate customRestTemplate, 
+                               String url, 
+                               Object[] pathParams, 
+                               Map<String, String> headerParams) {
     
 }
 ```
@@ -195,272 +144,305 @@ public Map<String, Object> getPath(String url,
 ```java
 /**
      * GET 请求Params数据
-     * inputParams必须为(String,String)
+     * inputParams必须为String
      *
-     * @param url          请求URL
-     * @param inputParams  请求Params数据
-     * @param timeout      超时时间
-     * @param headerParams 头部参数
-     * @return 数据Map，success标识
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param inputParams        请求Params数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
      */
-public Map<String, Object> getParams(String url, 
-                                     Map<String, String> inputParams, 
-                                     Integer timeout, 
-                                     Map<String, String> headerParams) {
+public static Response getParams(RestTemplate customRestTemplate, 
+                                 String url, 
+                                 Map<String, String> inputParams, 
+                                 Map<String, String> headerParams) {
     
 }
 ```
 
-### 6、PUT 请求Path数据
+## 三、基于SpringBoot项目使用
 
-```java
-/**
-     * PUT 请求Path数据
-     *
-     * @param url          请求URL
-     * @param pathParams   请求Path数据
-     * @param timeout      超时时间
-     * @param headerParams 头部参数
-     * @return 数据Map，success标识
-     */
-public Map<String, Object> putPath(String url, 
-                                   Object[] pathParams, 
-                                   Integer timeout, 
-                                   Map<String, String> headerParams) {
-    
-}
-```
-
-### 7、PUT 请求Form数据
-
-```java
-/**
-     * PUT 请求Form数据
-     *
-     * @param url          请求URL
-     * @param formParams   请求Form数据Map
-     * @param timeout      超时时间
-     * @param headerParams 头部参数
-     * @return 数据Map，success标识
-     */
-public Map<String, Object> putForm(String url, 
-                                   Map<String, Object> formParams, 
-                                   Integer timeout, 
-                                   Map<String, String> headerParams) {
-    
-}
-```
-
-### 8、DELETE 请求Path数据
-
-```java
-/**
-     * DELETE 请求Path数据
-     *
-     * @param url          请求URL
-     * @param pathParams   请求Path数据
-     * @param timeout      超时时间
-     * @param headerParams 头部参数
-     * @return 数据Map，success标识
-     */
-public Map<String, Object> deletePath(String url, 
-                                      Object[] pathParams, 
-                                      Integer timeout, 
-                                      Map<String, String> headerParams) {
-}
-```
-
-## 三、使用
-
-### 0、准备
-
-- 创建SpringBoot工程
-- 添加依赖
+### 1、添加依赖
 
 ```xml
-<!--fastjson-->
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>fastjson</artifactId>
-    <version>1.2.47</version>
-</dependency>
-
 <!--httpclient-->
 <dependency>
     <groupId>org.apache.httpcomponents</groupId>
     <artifactId>httpclient</artifactId>
+    <version>4.5.13</version>
 </dependency>
 ```
 
-- 导入**RestTemplateUtil.java**文件
-
-### 1、POST 请求Json数据
+### 2、书写RestTemplate配置
 
 ```java
-//创建工具类对象
-private final RestTemplateUtil restTemplateUtil = new RestTemplateUtil();
-//测试接口的地址
-private final String URL = "http://localhost:9024";
+@Configuration
+public class RestTemplateConfig {
 
-//1、测试post请求json数据
-@GetMapping(value = "/postJson")
-public Map testPostJson() {
-    User user = new User(1L, "社会王", "123abc");
-    Map<String, String> headParams = new HashMap<>();
-    headParams.put("token", "shw-123-jd");
-    return restTemplateUtil.postJson(URL + "/post/json", JSON.toJSONString(user), null, headParams);
-}
-```
+    /**
+     * Http连接管理器配置
+     *
+     * @return
+     */
+    @Bean
+    public HttpClientConnectionManager poolingHttpClientConnectionManager() {
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        // 最大连接数
+        connectionManager.setMaxTotal(500);
+        // 同路由并发数（每个主机的并发）
+        connectionManager.setDefaultMaxPerRoute(100);
+        return connectionManager;
+    }
 
-### 2、POST 请求Form数据
+    /**
+     * HttpClient配置
+     *
+     * @param connectionManager
+     * @return
+     */
+    @Bean
+    public HttpClient httpClient(HttpClientConnectionManager connectionManager) {
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        // 设置http连接管理器
+        httpClientBuilder.setConnectionManager(connectionManager);
+        // 设置重试次数
+        httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, true));
+        return httpClientBuilder.build();
+    }
 
-```java
-//2、测试post请求form数据
-@GetMapping(value = "/postForm")
-public Map testPostForm() {
-    Map<String, Object> formParams = new HashMap<>();
-    formParams.put("id", 1L);
-    formParams.put("name", "社会王");
-    formParams.put("pass", "123abc");
-    Map<String, String> headParams = new HashMap<>();
-    headParams.put("token", "shw-123-jd");
-    return restTemplateUtil.postForm(URL + "/post/form", formParams, null, headParams);
-}
-```
+    /**
+     * 请求连接配置
+     *
+     * @param httpClient
+     * @return
+     */
+    @Bean
+    public ClientHttpRequestFactory clientHttpRequestFactory(HttpClient httpClient) {
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        clientHttpRequestFactory.setHttpClient(httpClient);
+        // 连接池获取请求连接的超时时间，不宜过长，必须设置/毫秒（超时间未拿到可用连接，会抛出org.apache.http.conn.ConnectionPoolTimeoutException: Timeout waiting for connection from pool）
+        clientHttpRequestFactory.setConnectionRequestTimeout(10 * 1000);
+        // 连接超时时间/毫秒（连接上服务器(握手成功)的时间，超时抛出connect timeout）
+        clientHttpRequestFactory.setConnectTimeout(5 * 1000);
+        // 数据读取超时时间(socketTimeout)/毫秒（服务器返回数据(response)的时间，超时抛出read timeout）
+        clientHttpRequestFactory.setReadTimeout(10 * 1000);
+        return clientHttpRequestFactory;
+    }
 
-### 3、POST 请求File数据
-
-```java
-//3、测试post请求file数据
-@PostMapping(value = "/postFile")
-public Map testPostFile(@RequestParam(value = "file") MultipartFile multipartFile) {
-    try {
-        Map<String, String> headParams = new HashMap<>();
-        headParams.put("token", "shw-123-jd");
-        return restTemplateUtil.postFile(URL + "/post/file", multipartFile, null, headParams);
-    } catch (IOException e) {
-        e.printStackTrace();
-        return null;
+    /**
+     * RestTemplate模板
+     *
+     * @return
+     */
+    @Bean
+    public RestTemplate restTemplate(ClientHttpRequestFactory clientHttpRequestFactory) {
+        // 配置请求工厂
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setRequestFactory(clientHttpRequestFactory);
+        return restTemplate;
     }
 }
 ```
 
-### 4、GET 请求Path数据
+### 3、定义统一响应对象
 
 ```java
-//4、测试get请求path数据
-@GetMapping(value = "/getPath")
-public Map testGetPath() {
-    Object[] params = new Object[]{1, 5};
-    Map<String, String> headParams = new HashMap<>();
-    headParams.put("token", "shw-123-jd");
-    return restTemplateUtil.getPath(URL + "/get/path", params, null, headParams);
+@Data
+public class Response {
+
+    private String code;
+
+    private String message;
+
+    private Object data;
+
+    public Response(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public static Response error(String message) {
+        return new Response("error", message);
+    }
+
+    public static Response ok() {
+        return new Response("ok", null);
+    }
+
+    public Response data(Object data) {
+        this.data = data;
+        return this;
+    }
 }
 ```
 
-### 5、GET 请求Params数据
-
-```java
-//5、测试get请求params数据
-@GetMapping(value = "/getParams")
-public Map testGetParams() {
-    Map<String, String> inputParams = new HashMap<>();
-    inputParams.put("id", "1");
-    inputParams.put("name", "社会王");
-    inputParams.put("pass", "123abc");
-    Map<String, String> headParams = new HashMap<>();
-    headParams.put("token", "shw-123-jd");
-    return restTemplateUtil.getParams(URL + "/get/params", inputParams, null, headParams);
-}
-```
-
-### 6、PUT 请求Path数据
-
-```java
-//6、测试put请求path数据
-@GetMapping(value = "/putPath")
-public Map testPutPath() {
-    Object[] params = new Object[]{1};
-    Map<String, String> headParams = new HashMap<>();
-    headParams.put("token", "shw-123-jd");
-    return restTemplateUtil.putPath(URL + "/put/path", params, null, headParams);
-}
-```
-
-### 7、PUT 请求Form数据
-
-```java
-//7、测试put请求form数据
-@GetMapping(value = "/putForm")
-public Map testPutForm() {
-    Map<String, Object> formParams = new HashMap<>();
-    formParams.put("id", 1L);
-    formParams.put("name", "社会王");
-    formParams.put("pass", "123");
-    Map<String, String> headParams = new HashMap<>();
-    headParams.put("token", "shw-123-jd");
-    return restTemplateUtil.putForm(URL + "/put/form", formParams, null, headParams);
-}
-```
-
-### 8、DELETE 请求Path数据
-
-```java
-//8、测试delete请求path数据
-@GetMapping(value = "/deletePath")
-public Map testDeletePath() {
-    Object[] params = new Object[]{1};
-    Map<String, String> headParams = new HashMap<>();
-    headParams.put("token", "shw-123-jd");
-    return restTemplateUtil.deletePath(URL + "/delete/path", params, null, headParams);
-}
-```
-
-## 四、统一返回
-
-- 统一返回为Map格式，调用接口的响应数据必须能解析成**Map对象**，**不然会报错**
-- **success为成功标识，data为返回数据，业务获取解析data部分即可**
+### 4、导入工具类
 
 ```java
 /**
+ * @Copyright: Harbin Institute of Technology.All rights reserved.
+ * @Description: RestTemplate工具类
+ * @author: thailandking
+ * @since: 2020/3/19 15:24
+ * @history: 1.2020/3/19 created by thailandking
+ */
+public class RestTemplateUtil {
+
+    // 私有构造
+    private RestTemplateUtil() {
+    }
+
+    /**
+     * @Author thailandking
+     * @Date 2020/3/19 17:37
+     * @LastEditors thailandking
+     * @LastEditTime 2020/3/19 17:37
+     * @Description 获取自定义header
+     */
+    private static HttpHeaders getCustomHeaders(Map<String, String> headerParams, MediaType mediaType) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAll(headerParams);
+        if (mediaType != null) {
+            headers.setContentType(mediaType);
+        }
+        return headers;
+    }
+
+    /**
      * @Author thailandking
      * @Date 2020/3/19 17:47
      * @LastEditors thailandking
      * @LastEditTime 2020/3/19 17:47
-     * @Description 处理调用结果 (接口返回数据必须能解析成Map对象格式)
+     * @Description 处理调用结果
      */
-public Map<String, Object> handleResult(ResponseEntity<String> resp) {
-    Map<String, Object> resultMap = new HashMap<>();
-    if (resp.getStatusCodeValue() == 200) {
-        String body = resp.getBody();
-        Map dataMap = JSON.parseObject(body, Map.class);
-        resultMap.put("success", true);
-        resultMap.put("data", dataMap);
-    } else {
-        resultMap.put("success", false);
+    private static Response handleResult(ResponseEntity<String> resp) {
+        if (resp.getStatusCodeValue() == 200) {
+            String body = resp.getBody();
+            return Response.ok().data(body);
+        }
+        return Response.error("调用异常");
     }
-    return resultMap;
+
+    /**
+     * All 请求Path数据
+     *
+     * @param customRestTemplate 调用RestTemplate
+     * @param method             请求method
+     * @param url                请求URL
+     * @param pathParams         请求Path数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
+     */
+    private static Response allPath(RestTemplate customRestTemplate, HttpMethod method, String url, Object[] pathParams, Map<String, String> headerParams) {
+        HttpHeaders customHeaders = getCustomHeaders(headerParams, null);
+        for (Object pathParam : pathParams) {
+            url = url + "/" + pathParam;
+        }
+        HttpEntity entity = new HttpEntity<>(null, customHeaders);
+        ResponseEntity<String> resp = customRestTemplate.exchange(url, method, entity, String.class);
+        return handleResult(resp);
+    }
+
+    /**
+     * All 请求Json数据
+     *
+     * @param customRestTemplate 调用RestTemplate
+     * @param method             请求method
+     * @param url                请求URL
+     * @param jsonParams         请求Json数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
+     */
+    private static Response allJson(RestTemplate customRestTemplate, HttpMethod method, String url, String jsonParams, Map<String, String> headerParams) {
+        HttpHeaders customHeaders = getCustomHeaders(headerParams, new MediaType("application", "json", StandardCharsets.UTF_8));
+        HttpEntity entity = new HttpEntity<>(jsonParams, customHeaders);
+        ResponseEntity<String> resp = customRestTemplate.exchange(url, method, entity, String.class);
+        return handleResult(resp);
+    }
+
+    /**
+     * POST 请求Json数据
+     *
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param jsonParams         请求Json数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
+     */
+    public static Response postJson(RestTemplate customRestTemplate, String url, String jsonParams, Map<String, String> headerParams) {
+        return allJson(customRestTemplate, HttpMethod.POST, url, jsonParams, headerParams);
+    }
+
+    /**
+     * DELETE 请求Path数据
+     *
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param pathParams         请求Path数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
+     */
+    public static Response deletePath(RestTemplate customRestTemplate, String url, Object[] pathParams, Map<String, String> headerParams) {
+        return allPath(customRestTemplate, HttpMethod.DELETE, url, pathParams, headerParams);
+    }
+
+    /**
+     * PUT 请求Json数据
+     *
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param jsonParams         请求Json数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
+     */
+    public static Response putJson(RestTemplate customRestTemplate, String url, String jsonParams, Map<String, String> headerParams) {
+        return allJson(customRestTemplate, HttpMethod.PUT, url, jsonParams, headerParams);
+    }
+
+    /**
+     * GET 请求Path数据
+     *
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param pathParams         请求Path数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
+     */
+    public static Response getPath(RestTemplate customRestTemplate, String url, Object[] pathParams, Map<String, String> headerParams) {
+        return allPath(customRestTemplate, HttpMethod.GET, url, pathParams, headerParams);
+    }
+
+    /**
+     * GET 请求Params数据
+     * inputParams必须为String
+     *
+     * @param customRestTemplate 调用RestTemplate
+     * @param url                请求URL
+     * @param inputParams        请求Params数据
+     * @param headerParams       头部参数
+     * @return Response          统一响应对象
+     */
+    public static Response getParams(RestTemplate customRestTemplate, String url, Map<String, String> inputParams, Map<String, String> headerParams) {
+        HttpHeaders customHeaders = getCustomHeaders(headerParams, null);
+        HttpEntity entity = new HttpEntity<>(customHeaders);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.setAll(inputParams);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+        URI uri = builder.queryParams(params).build().encode().toUri();
+        ResponseEntity<String> resp = customRestTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+        return handleResult(resp);
+    }
 }
 ```
 
-- 成功返回
+### 5、测试调用
 
-```json
-{
-  "data": {
-    "pass": "123abc",
-    "name": "社会王_shw-123-jd",
-    "id": 1
-  },
-  "success": true
-}
-```
-
-- 错误返回
-
-```json
-{
-  "success": false
+```java
+@Test
+public void postJsonData() throws JsonProcessingException {
+    Response response = RestTemplateUtil.postJson(restTemplate, URL + "/post/json", mapper.writeValueAsString(user), headParams);
+    Assertions.assertEquals(response.getCode(), "ok");
+    Assertions.assertEquals(response.getData(), RETURN_USER_NAME);
 }
 ```
 
